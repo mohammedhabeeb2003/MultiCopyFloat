@@ -52,21 +52,12 @@
         android:foregroundGravity="bottom"
         android:gravity="bottom"
         android:layout_weight="0.47">
-        <Button
-            android:id="@+id/update"
-            android:text="Update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/delete"
-            android:text="Delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
         <Button
             android:id="@+id/clear"
-            android:text="Clear"
+            android:text="Delete All"
             android:onClick="clearDatabase"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>

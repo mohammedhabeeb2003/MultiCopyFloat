@@ -5,9 +5,12 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
@@ -37,7 +40,9 @@ public class copyService extends Service {
                 if(cData!=null&&cData.getItemCount() > 0)
                 {
                     item = cData.getItemAt(0);
-                    serviceclipText = (String) item.getText();
+                    serviceclipText = (String)item.getText();
+
+                    requestPermmission();
 
                     startService(new Intent(copyService.this,FloatingFaceBubbleService.class));
                 }
@@ -55,7 +60,8 @@ public class copyService extends Service {
                     try {
                         mydb.putString(serviceclipText);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Toast.makeText(copyService.this, "Already In List", Toast.LENGTH_SHORT).show();
+
                     }
                 }
             }
@@ -70,5 +76,16 @@ public class copyService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+    public void requestPermmission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(!Settings.canDrawOverlays(this)){
+                Intent i = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:"+getPackageName()));
+                i.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                Toast.makeText(this, "Please Grant Permission", Toast.LENGTH_SHORT).show();
+                startActivity(i);
+            }
+        }
+
     }
 }
