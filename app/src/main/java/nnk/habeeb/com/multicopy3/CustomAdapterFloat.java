@@ -1,31 +1,31 @@
 package nnk.habeeb.com.multicopy3;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
 
 /**
  * Created by Habeeb on 12/14/2016.
  */
 
-import android.app.Activity;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+public class CustomAdapterFloat extends ArrayAdapter<Items> {
 
-import java.util.List;
-
-public class CustomAdapter extends ArrayAdapter<Items> {
-
-    private MainActivity activity;
+    private FloatingFaceBubbleService activity;
     private SqliteHelper databaseHelper;
     private List<Items> friendList;
 
-    public CustomAdapter(MainActivity context, int resource, List<Items> objects, SqliteHelper helper) {
+    public CustomAdapterFloat(FloatingFaceBubbleService context, int resource, List<Items> objects, SqliteHelper helper) {
         super(context, resource, objects);
         this.activity = context;
         this.databaseHelper = helper;
@@ -38,7 +38,7 @@ public class CustomAdapter extends ArrayAdapter<Items> {
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.custom_list_view, parent, false);
+            convertView = inflater.inflate(R.layout.custom_listview_float, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
@@ -52,15 +52,24 @@ public class CustomAdapter extends ArrayAdapter<Items> {
             @Override
             public void onClick(View view) {
                 databaseHelper.deleteFriend(getItem(position)); //delete in db
-                Toast.makeText(activity, "Deleted!", Toast.LENGTH_SHORT).show();
+                    new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.onDismiss();
+                        activity.reloadinglistview();
+                    }
+                }, 200);
+
 
                 //reload the database to view
-                activity.reloadingDatabase();
+
+
+
             }
         });
 
         //Edit/Update an item
-        holder.btnEdit.setOnClickListener(new View.OnClickListener() {
+      /*  holder.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
@@ -93,7 +102,7 @@ public class CustomAdapter extends ArrayAdapter<Items> {
                         Toast.makeText(activity, "Updated!", Toast.LENGTH_SHORT).show();
 
                         //reload the database to view
-                        activity.reloadingDatabase();
+                        activity.reloadinglistview();
                     }
                 });
 
@@ -130,7 +139,7 @@ public class CustomAdapter extends ArrayAdapter<Items> {
                 //show alert
                 alertDialog.show();
             }
-        });
+        });*/
 
         return convertView;
     }
@@ -138,12 +147,13 @@ public class CustomAdapter extends ArrayAdapter<Items> {
     private static class ViewHolder {
         private TextView name;
         private View btnDelete;
-        private View btnEdit;
+        /*private View btnEdit;*/
 
         public ViewHolder (View v) {
             name = (TextView)v.findViewById(R.id.tv_lv_float);
             btnDelete = v.findViewById(R.id.btn_delete_float);
-            btnEdit = v.findViewById(R.id.btn_edit_float);
+           /* btnEdit = v.findViewById(R.id.btn_edit_float);*/
         }
     }
+
 }

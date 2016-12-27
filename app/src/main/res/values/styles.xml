@@ -6,6 +6,13 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
+    <style name="Animation">
+        <item name="android:windowEnterAnimation">@anim/pop_enter</item>
+        <item name="@android:windowExitAnimation">@anim/popup_exit</item>
+    </style>
+
+    - See more at: http://www.allappsdevelopers.com/TopicDetail.aspx?TopicID=5aa6ea12-e324-4cae-8cbe-1ffc0da673a9#sthash.GpnEHl39.dpuf
 
 </resources>

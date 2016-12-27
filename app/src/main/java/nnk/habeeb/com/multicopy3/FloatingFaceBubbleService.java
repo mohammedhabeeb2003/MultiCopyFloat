@@ -6,8 +6,12 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.transition.Transition;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -17,22 +21,24 @@ import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListPopupWindow;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import com.mukesh.tinydb.TinyDB;
+import java.util.List;
 
-import java.util.ArrayList;
 
 public class FloatingFaceBubbleService extends Service {
     private WindowManager windowManager;
     private ImageView floatingFaceBubble;
-    ArrayList aa;
+    List<Items> contact_array_from_db;
     Binder binder;
     SqliteHelper mydb;
-
+    CustomAdapterFloat mCustomAdapter;
+    PopupWindow mPopupWindow;
+    ListPopupWindow popup;
+    LayoutParams myParams;
 
     public void onCreate() {
 
@@ -46,7 +52,7 @@ public class FloatingFaceBubbleService extends Service {
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         //here is all the science of params
-        final LayoutParams myParams = new LayoutParams(
+        myParams = new LayoutParams(
 
                 LayoutParams.TYPE_PHONE,
                 LayoutParams.FLAG_NOT_FOCUSABLE,
@@ -63,6 +69,7 @@ public class FloatingFaceBubbleService extends Service {
 
             Log.e("Windows Manager", "Error", e);
         }
+
         try {
             //for moving the picture on touch and slide
             floatingFaceBubble.setOnTouchListener(new View.OnTouchListener() {
@@ -105,10 +112,23 @@ public class FloatingFaceBubbleService extends Service {
         }
 
         floatingFaceBubble.setOnClickListener(new View.OnClickListener() {
+            boolean toggle = true;
             @Override
             public void onClick(View view) {
-                aa = mydb.GetListItem();
-                initiatepopupwindow(floatingFaceBubble);
+                setFloatView();
+                if(toggle){
+                    reloadinglistview();
+                    initiatepopupwindow(floatingFaceBubble);
+                    toggle = false;
+                }
+                else{
+                    if(popup != null && popup.isShowing())
+                        popup.dismiss();
+                    toggle = true;
+                }
+
+
+
 
             }
 
@@ -118,34 +138,31 @@ public class FloatingFaceBubbleService extends Service {
 
     private void initiatepopupwindow(View anchor) {
 
-        try {
 
-            Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-            final ListPopupWindow popup = new ListPopupWindow(this);
-            popup.setAnchorView(anchor);
-            popup.setWidth((int) (display.getWidth()));
-            popup.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aa));
-            popup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    String text = aa.get(i).toString();
-                    ClipboardManager clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
-                    ClipData item = ClipData.newPlainText("Copy",text);
-                    clipboardManager.setPrimaryClip(item);
-                    Toast.makeText(FloatingFaceBubbleService.this, "Text Copied", Toast.LENGTH_SHORT).show();
+        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        popup = new ListPopupWindow(this);
 
-                }
-            });
-            popup.show();
+        popup.setAnchorView(anchor);
 
-        } catch (Exception e) {
+        popup.setWidth((int) (display.getWidth()));
+        mCustomAdapter = new CustomAdapterFloat(this, R.layout.custom_listview_float, contact_array_from_db, mydb);
+        popup.setAdapter(mCustomAdapter);
+        popup.setAnimationStyle(R.style.Animation);
+        popup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String text = contact_array_from_db.get(i).toString();
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData item = ClipData.newPlainText("Copy", text);
+                clipboardManager.setPrimaryClip(item);
+                Toast.makeText(FloatingFaceBubbleService.this, "Text Copied", Toast.LENGTH_SHORT).show();
 
-
-        }
+            }
+        });
+        popup.show();
 
 
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -163,6 +180,46 @@ public class FloatingFaceBubbleService extends Service {
 
 
         return null;
+    }
+    public void reloadinglistview() {
+        contact_array_from_db = mydb.getAllFriends();
+        if (contact_array_from_db.size() == 0) {
+            Toast.makeText(this, "No record found in database!", Toast.LENGTH_SHORT).show();
+
+        }
+        if(mCustomAdapter!=null) {
+
+
+            initiatepopupwindow(floatingFaceBubble);
+            mCustomAdapter.notifyDataSetChanged();
+        }
+
+    }
+    public void setFloatView(){
+
+
+        LayoutParams paramsT = myParams;
+        myParams.gravity = Gravity.TOP | Gravity.LEFT;
+        myParams.x=0;
+        myParams.y=100;
+        windowManager.updateViewLayout(floatingFaceBubble, paramsT);
+
+    }
+
+    public boolean onDismiss(){
+
+        if(popup.isShowing()) {
+            popup.dismiss();
+            mCustomAdapter.notifyDataSetChanged();
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    public void onDismising(){
+        popup.dismiss();
+        mCustomAdapter.clear();
     }
 
 }
