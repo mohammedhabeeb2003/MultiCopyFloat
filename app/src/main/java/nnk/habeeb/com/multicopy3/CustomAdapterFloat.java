@@ -55,8 +55,8 @@ public class CustomAdapterFloat extends ArrayAdapter<Items> {
                     new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        activity.onDismiss();
-                        activity.reloadinglistview();
+                       /* activity.onDismiss();
+                        activity.reloadinglistview();*/
                     }
                 }, 200);
 

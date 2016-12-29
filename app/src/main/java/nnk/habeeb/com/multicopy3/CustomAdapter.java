@@ -1,7 +1,11 @@
 package nnk.habeeb.com.multicopy3;
 
 import android.content.DialogInterface;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
+import android.text.method.LinkMovementMethod;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +37,11 @@ public class CustomAdapter extends ArrayAdapter<Items> {
     }
 
     @Override
+    public int getCount() {
+         return friendList.size();
+    }
+
+    @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -44,11 +53,14 @@ public class CustomAdapter extends ArrayAdapter<Items> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
+        holder.name.setMovementMethod(new ScrollingMovementMethod());
         holder.name.setText(getItem(position).getNames());
+
+
 
         //Delete an item
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
             @Override
             public void onClick(View view) {
                 databaseHelper.deleteFriend(getItem(position)); //delete in db
@@ -56,6 +68,7 @@ public class CustomAdapter extends ArrayAdapter<Items> {
 
                 //reload the database to view
                 activity.reloadingDatabase();
+
             }
         });
 
@@ -85,6 +98,7 @@ public class CustomAdapter extends ArrayAdapter<Items> {
 
                 alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Items friend = new Items(nameBox.getText().toString());
@@ -146,4 +160,5 @@ public class CustomAdapter extends ArrayAdapter<Items> {
             btnEdit = v.findViewById(R.id.btn_edit_float);
         }
     }
+
 }

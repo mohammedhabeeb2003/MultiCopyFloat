@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">MultiCopy3</string>
+    <string name="finish_service">Finish Service</string>
+    <string name="dismiss_popup">Dismiss Popup</string>
+    <string name="it_s_a_popupwindow">It\'s a PopupWindow</string>
+    <string name="activate">Activate</string>
+    <string name="copy">Copy</string>
+    <string name="delete_all">Delete All</string>
+    <string name="textview">TextView</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

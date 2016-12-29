@@ -1,38 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
-        android:text="TextView"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:text="@string/textview"
+        android:scrollbars = "vertical"
+        android:lines="4"
+        android:layout_width="match_parent"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_height="80dp"
         android:layout_alignParentTop="true"
-        android:textSize="20dp"
+        android:textSize="12sp"
         android:textStyle="bold"
+        android:background="@drawable/border"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="14dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="20dp"
         android:id="@+id/tv_lv_float" />
-    <Button
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/edit_button"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="15dp"
-        android:id="@+id/btn_edit_float"
-        android:layout_marginRight="80dp"/>
 
     <Button
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:background="@drawable/delete"
+        android:background="@android:drawable/ic_menu_edit"
+        android:layout_below="@+id/tv_lv_float"
+        android:layout_marginLeft="250dp"
+        android:id="@+id/btn_edit_float"
+        tools:ignore="RtlHardcoded" />
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@android:drawable/ic_menu_delete"
         android:id="@+id/btn_delete_float"
-        android:layout_marginRight="33dp"
-        android:layout_marginEnd="33dp"
-        android:layout_alignBottom="@+id/tv_lv_float"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@+id/tv_lv_float"
+        android:layout_marginLeft="290dp"
+        tools:ignore="RtlHardcoded" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#9B33E7"
+        android:layout_below="@+id/tv_lv_float"/>
+
+   <!-- <Button
+
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="190dp"
+        android:layout_below="@+id/tv_lv_float"
+        android:background="@android:drawable/ic_menu_share"
+        android:layout_alignLeft="@+id/tv_lv_float"
+        android:layout_alignStart="@+id/tv_lv_float"
+        android:id="@+id/share"
+        tools:ignore="RtlHardcoded" />-->
+
+
 </RelativeLayout>
