@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity{
 
     SqliteHelper mSqliteHelper;
     EditText mEdit_text;
-    ArrayList<String> onlyText;
+
     ListView lv;
     ArrayList<Items> contact_data = new ArrayList<Items>();
     CustomAdapter mCustomAdapter;
@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     //Inserting Data in Database
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void copy(View view) {
 
         String name = mEdit_text.getText().toString().trim();
