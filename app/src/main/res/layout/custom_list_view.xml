@@ -43,7 +43,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="#9B33E7"
+        android:background="#BA68C8"
         android:layout_below="@+id/tv_lv_float"/>
 
    <!-- <Button

@@ -77,19 +77,15 @@ public class CustomAdapter extends ArrayAdapter<Items> {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
-                alertDialog.setTitle("Update a Friend");
+                alertDialog.setTitle("Update Text");
 
                 LinearLayout layout = new LinearLayout(activity);
                 layout.setPadding(10, 10, 10, 10);
                 layout.setOrientation(LinearLayout.VERTICAL);
 
                 final EditText nameBox = new EditText(activity);
-                nameBox.setHint("Name");
+                nameBox.setHint("Update");
                 layout.addView(nameBox);
-
-                final EditText jobBox = new EditText(activity);
-                jobBox.setHint("job");
-                layout.addView(jobBox);
 
                 nameBox.setText(getItem(position).getNames());
 

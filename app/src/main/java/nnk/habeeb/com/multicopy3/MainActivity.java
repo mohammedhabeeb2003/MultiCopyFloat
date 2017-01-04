@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity{
     ListView lv;
     ArrayList<Items> contact_data = new ArrayList<Items>();
     CustomAdapter mCustomAdapter;
-    CheckBox serviceCheckBox;
+
     List<Items> contact_array_from_db;
     ToggleButton tg_on_off;
     TinyDB mytydb;
@@ -57,11 +57,8 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       /* mEdit_text =(EditText)findViewById(R.id.editText);*/
         lv = (ListView) findViewById(R.id.list_view);
         bt_clear = (Button)findViewById(R.id.clear);
-        serviceCheckBox = (CheckBox) findViewById(R.id.ActivateCheckBox);
-
         tg_on_off = (ToggleButton) findViewById(R.id.power_button);
         mytydb = new TinyDB(this);
         contact_array_from_db = new ArrayList<>();
@@ -73,11 +70,10 @@ public class MainActivity extends AppCompatActivity{
 
         if (isMyServiceRunning(FloatingFaceBubbleService.class)) {
 
-            serviceCheckBox.setChecked(true);
+
             tg_on_off.setChecked(true);
         } else {
-            serviceCheckBox.setChecked(false);
-            serviceCheckBox.setChecked(false);
+            tg_on_off.setChecked(false);
         }
 
         tg_on_off.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -157,6 +153,7 @@ public class MainActivity extends AppCompatActivity{
         return false;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onResume() {
         super.onResume();
@@ -168,16 +165,17 @@ public class MainActivity extends AppCompatActivity{
         try {
             mCustomAdapter.notifyDataSetChanged();
         } catch (Exception e) {
-
+           Log.e("Adapter","Error="+e);
         }
         if (isMyServiceRunning(FloatingFaceBubbleService.class)) {
 
-            serviceCheckBox.setChecked(true);
+          tg_on_off.setChecked(true);
         } else {
-            serviceCheckBox.setChecked(false);
+            tg_on_off.setChecked(false);
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -186,10 +184,9 @@ public class MainActivity extends AppCompatActivity{
         mCustomAdapter.notifyDataSetChanged();
         if (isMyServiceRunning(FloatingFaceBubbleService.class)) {
 
-            serviceCheckBox.setChecked(true);
+
             tg_on_off.setChecked(true);
         } else {
-            serviceCheckBox.setChecked(false);
             tg_on_off.setChecked(false);
         }
     }
@@ -198,6 +195,7 @@ public class MainActivity extends AppCompatActivity{
 
         if (!mSqliteHelper.GetListItem().isEmpty()) {
             new AlertDialog.Builder(this).setTitle("DeleteAll").setMessage("Are You Sure ? Data Cannot Be Retrived").setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mSqliteHelper.cleanDB();
@@ -230,7 +228,7 @@ public class MainActivity extends AppCompatActivity{
         if (checked) {
             requestPermmission();
             startService(new Intent(this, FloatingFaceBubbleService.class));
-            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+
         } else {
             stopService(new Intent(this, FloatingFaceBubbleService.class));
         }

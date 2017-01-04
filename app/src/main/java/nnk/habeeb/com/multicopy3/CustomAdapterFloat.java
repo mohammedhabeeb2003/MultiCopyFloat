@@ -3,6 +3,7 @@ package nnk.habeeb.com.multicopy3;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,7 @@ public class CustomAdapterFloat extends ArrayAdapter<Items> {
         this.databaseHelper = helper;
         this.friendList = objects;
     }
-
+ @NonNull
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -44,19 +45,23 @@ public class CustomAdapterFloat extends ArrayAdapter<Items> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+try {
+    holder.name.setText(getItem(position).getNames());
+}
+catch (NullPointerException e){
 
-        holder.name.setText(getItem(position).getNames());
-
+}
         //Delete an item
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseHelper.deleteFriend(getItem(position)); //delete in db
+                databaseHelper.deleteFriend(getItem(position));
+                activity.onDismiss();//delete in db
                     new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                       /* activity.onDismiss();
-                        activity.reloadinglistview();*/
+
+                        activity.reloadinglistview();
                     }
                 }, 200);
 
